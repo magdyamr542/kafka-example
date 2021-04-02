@@ -14,6 +14,8 @@ services:
       KAFKA_ADVERTISED_HOST_NAME: 192.168.178.38
       KAFKA_CREATE_TOPICS: test-topic:1:1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+      KAFKA_DELETE_TOPIC_ENABLE: "true"
     ports:
       - ${KAFKA_PORT_HOST}:${KAFKA_PORT_CONTAINER}
     volumes:
