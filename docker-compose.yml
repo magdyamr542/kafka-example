@@ -12,7 +12,6 @@ services:
       - zookeeper
     environment:
       KAFKA_ADVERTISED_HOST_NAME: 192.168.178.38
-      KAFKA_CREATE_TOPICS: test-topic:1:1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
       KAFKA_DELETE_TOPIC_ENABLE: "true"
@@ -29,5 +28,16 @@ services:
       - kafka
     volumes:
       - ./services/producer/:/usr/src/app
+    env_file:
+      - .env
+  node-consumer:
+    build: ./services/consumer
+    container_name: ${CONSUMER_CONTAINER_NAME}
+    ports:
+      - ${CONSUMER_PORT_HOST}:${CONSUMER_PORT_CONTAINER}
+    depends_on:
+      - kafka
+    volumes:
+      - ./services/consumer/:/usr/src/app
     env_file:
       - .env
