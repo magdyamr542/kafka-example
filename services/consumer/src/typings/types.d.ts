@@ -12,6 +12,7 @@ declare global {
       PRODUCER_CONTAINER_NAME?: string;
       CONSUMER_CONTAINER_NAME?: string;
       KAFKA_CONTAINER_NAME?: string;
+      TOPICS?: string;
     }
   }
 }

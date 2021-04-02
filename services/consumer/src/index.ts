@@ -6,23 +6,37 @@ import { Kafka } from "kafkajs";
 const env = getEnv();
 
 const kafkaBroker = new Kafka({
-  clientId: env.PRODUCER_CONTAINER_NAME,
+  clientId: env.CONSUMER_CONTAINER_NAME,
   brokers: [`${env.KAFKA_CONTAINER_NAME}:${env.KAFKA_PORT_CONTAINER}`],
 });
-const consumer = kafkaBroker.consumer();
-const run = async () => {
+const admin = kafkaBroker.admin();
+const consumer = kafkaBroker.consumer({ groupId: "group-name" });
+
+const connect = async () => {
+  await admin.connect();
   await consumer.connect();
-  await consumer.subscribe({ topic: "some-random-topic", fromBeginning: true });
-  await consumer.run({
-    eachMessage: async ({ topic, partition, message }) => {
-      console.log({
-        topic,
-        partition,
-        offset: message.offset,
-        value: message.value?.toString(),
-      });
-    },
+};
+
+const consume = async () => {
+  const topics = env.TOPICS?.split(",");
+  topics?.forEach(async (topic) => {
+    await consumer.subscribe({ topic, fromBeginning: true });
+    await consumer.run({
+      eachMessage: async ({ topic, partition, message }) => {
+        console.log({
+          topic,
+          partition,
+          offset: message.offset,
+          value: message.value?.toString(),
+        });
+      },
+    });
   });
+};
+
+const doConsume = async () => {
+  await connect();
+  consume().catch(console.error);
 };
 
 const main = async () => {
@@ -30,15 +44,18 @@ const main = async () => {
   app.use(cors());
   app.use(express.json());
 
-  app.get("/test", (_, res) => {
-    res.send("Hello. this message is from the producer");
+  app.get("/listTopics", async (_, res) => {
+    res.send(await admin.listTopics());
   });
 
-  app.listen(env.PRODUCER_PORT_CONTAINER, () =>
-    console.log("Server Started on port => " + env.PRODUCER_PORT_CONTAINER)
-  );
+  app.post("/consume", async (_, res) => {
+    await doConsume();
+    res.send("Setup consuming...");
+  });
 
-  run().catch(console.error);
+  app.listen(env.CONSUMER_PORT_CONTAINER, () =>
+    console.log("Consumer Started on port => " + env.CONSUMER_PORT_CONTAINER)
+  );
 };
 
 main();
