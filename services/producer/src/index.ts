@@ -10,12 +10,39 @@ const kafkaBroker = new Kafka({
   brokers: [`${env.KAFKA_CONTAINER_NAME}:${env.KAFKA_PORT_CONTAINER}`],
 });
 const producer = kafkaBroker.producer();
-const run = async () => {
-  await producer.connect();
-  await producer.send({
-    topic: "some-random-topic",
-    messages: [{ value: "Hello KafkaJS user!" }],
+const admin = kafkaBroker.admin();
+
+const produce = async () => {
+  const topics = env.TOPICS?.split(",");
+  topics?.forEach(async (topic) => {
+    const randomNumber = Math.floor(Math.random() * 100000);
+    await producer.send({
+      topic,
+      messages: [{ value: `Hello this is msg from kafka => ${randomNumber}` }],
+    });
   });
+};
+
+const connect = async () => {
+  await producer.connect();
+};
+
+const createTopics = async () => {
+  await admin.connect();
+  const topics = env.TOPICS?.split(",").map((topic) => {
+    return { topic };
+  });
+  if (topics) {
+    console.log("Creating topics..", topics);
+    await admin.createTopics({
+      waitForLeaders: true,
+      topics,
+    });
+  }
+};
+const doProduce = async () => {
+  await connect();
+  produce().catch(console.error);
 };
 
 const main = async () => {
@@ -23,15 +50,19 @@ const main = async () => {
   app.use(cors());
   app.use(express.json());
 
-  app.get("/test", (_, res) => {
-    res.send("Hello. this message is from the producer");
+  app.post("/produce", async (_, res) => {
+    await doProduce();
+    res.send("Done producing...");
+  });
+
+  app.post("/createTopics", async (_, res) => {
+    await createTopics();
+    res.send("Done creating topics...");
   });
 
   app.listen(env.PRODUCER_PORT_CONTAINER, () =>
-    console.log("Server Started on port => " + env.PRODUCER_PORT_CONTAINER)
+    console.log("Producer Started on port => " + env.PRODUCER_PORT_CONTAINER)
   );
-
-  run().catch(console.error);
 };
 
 main();
