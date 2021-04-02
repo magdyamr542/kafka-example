@@ -21,7 +21,7 @@
     "allowSyntheticDefaultImports": true,
     "skipLibCheck": true,
     "emitDecoratorMetadata": true,
-    "typeRoots": ["./node_modules/@types" , "./src"],
+    "typeRoots": ["./node_modules/@types" , "./src/typings"],
     "baseUrl": "./"
   },
   "exclude": ["node_modules"],
