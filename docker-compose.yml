@@ -7,7 +7,7 @@ services:
       - 2181:2181
   kafka:
     image: wurstmeister/kafka:2.11-1.1.0
-    container_name: kafka-kafka
+    container_name: ${KAFKA_CONTAINER_NAME}
     depends_on:
       - zookeeper
     environment:
@@ -15,14 +15,14 @@ services:
       KAFKA_CREATE_TOPICS: test-topic:1:1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
     ports:
-      - 9095:9092
+      - ${KAFKA_PORT_HOST}:${KAFKA_PORT_CONTAINER}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
   node-producer:
     build: ./services/producer
     container_name: ${PRODUCER_CONTAINER_NAME}
     ports:
-      - ${PRODUCER_PORT}:${PRODUCER_PORT}
+      - ${PRODUCER_PORT_HOST}:${PRODUCER_PORT_CONTAINER}
     depends_on:
       - kafka
     volumes:
