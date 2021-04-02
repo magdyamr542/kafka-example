@@ -18,3 +18,14 @@ services:
       - 9095:9092
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+  node-producer:
+    build: ./services/producer
+    container_name: ${PRODUCER_CONTAINER_NAME}
+    ports:
+      - ${PRODUCER_PORT}:${PRODUCER_PORT}
+    depends_on:
+      - kafka
+    volumes:
+      - ./services/producer/:/usr/src/app
+    env_file:
+      - .env
