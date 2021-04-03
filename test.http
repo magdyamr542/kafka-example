@@ -1,11 +1,60 @@
 
 # getting all topics
-GET http://localhost:1235/listTopics 
+GET http://localhost:1234/getTopics 
+
+####
+
+# creating a topic
+POST http://localhost:1234/createTopic HTTP/1.1
+content-type: application/json
+
+{
+    "topic": "3"
+}
+
+####
+
+# deleting a topic
+DELETE http://localhost:1234/deleteTopic HTTP/1.1
+content-type: application/json
+
+{
+    "topic": "some-non-existent-topic"
+}
+
+####
+# deleting topics
+DELETE http://localhost:1234/deleteTopics HTTP/1.1
+content-type: application/json
+
+{
+    "topics": ["1" , "3"]
+}
+####
+
+# sending a message to a topic that does exist
+POST http://localhost:1234/sendMessage HTTP/1.1
+content-type: application/json
+
+{
+    "topic": "mongo-topic",
+    "message" : {
+        "key" : "my key"
+    }
+}
+
+####
+
+# sending a message to a topic that does not exist
+POST http://localhost:1234/sendMessage HTTP/1.1
+content-type: application/json
+
+{
+    "topic": "234234",
+    "message" : "Another Generated Message to test-1 Topic"
+}
 
 
-### 
 
-# start producing
-POST http://localhost:1234/produce HTTP/1.1
 
 
