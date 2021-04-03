@@ -4,6 +4,7 @@ export interface IKafkaTopicManager {
   createTopicByName: (topicName: string) => Promise<boolean>;
   createTopicByConfig: (topic: ITopicConfig) => Promise<boolean>;
   deleteTopicByName: (topicName: string) => Promise<boolean>;
+  deleteTopicsByName: (topics: string[]) => Promise<boolean>;
   getTopicMetaData: (topicName: string) => Promise<ITopicMetadata[]>;
   getTopics: () => Promise<string[]>;
 }
@@ -16,24 +17,40 @@ export class KafkaTopicManager implements IKafkaTopicManager {
   }
 
   public async createTopicByName(topicName: string) {
-    return this.admin.createTopics({
-      waitForLeaders: true,
-      topics: [
-        {
-          topic: topicName,
-        },
-      ],
-    });
+    try {
+      return await this.admin.createTopics({
+        waitForLeaders: true,
+        topics: [
+          {
+            topic: topicName,
+          },
+        ],
+      });
+    } catch {
+      return false;
+    }
   }
-  public createTopicByConfig(topic: ITopicConfig) {
-    return this.admin.createTopics({
-      waitForLeaders: true,
-      topics: [topic],
-    });
+  public async createTopicByConfig(topic: ITopicConfig) {
+    try {
+      return this.admin.createTopics({
+        waitForLeaders: true,
+        topics: [topic],
+      });
+    } catch {
+      return false;
+    }
   }
 
   getTopics() {
     return this.admin.listTopics();
+  }
+
+  public async deleteTopicsByName(topics: string[]) {
+    const booleans = topics.map((topic) => this.deleteTopicByName(topic));
+    return (
+      (await Promise.all(booleans)).filter((bool) => bool === false).length ===
+      0
+    );
   }
   public async deleteTopicByName(topicName: string) {
     try {
