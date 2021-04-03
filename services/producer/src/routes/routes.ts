@@ -97,12 +97,14 @@ router.post("/broadcastMessage", async (req, res) => {
   );
   // Send messages and collect metadata
   const collectedMetaData: { [topic: string]: RecordMetadata[] } = {};
-  await availableTopics.forEach(async (topic) => {
-    if (ignoredTopics.includes(topic)) return;
+  const mappings = availableTopics.map(async (topic) => {
+    if (ignoredTopics.includes(topic)) return false;
     collectedMetaData[topic] = await kafkaProducer.send(topic, [
       generateKafkaMessage(message),
     ]);
+    return true;
   });
+  await Promise.all(mappings);
   // Tell client about results
   res.json({
     data: collectedMetaData,
