@@ -2,6 +2,7 @@ import { Router } from "express";
 import { RecordMetadata } from "kafkajs";
 import { kafkaInit } from "../api/kafka-init";
 import { generateKafkaMessage } from "../utils/utils";
+import { logger } from "../utils/winston";
 const router = Router();
 
 /* Kafka Init */
@@ -11,6 +12,7 @@ const sendMessage = (message: string) => ({ message });
 
 // Getting all the topics
 router.get("/getTopics", async (_, res) => {
+  logger.info("Got Request /getTopics");
   res.json({
     topics: await kafkaTopicManager.getTopics(),
   });
@@ -23,6 +25,7 @@ router.post("/createTopic", async (req, res) => {
   if (wasTopicCreated) {
     res.json(sendMessage(`Topic ${topic} was created successfully.`));
   } else {
+    logger.error(`Topic ${topic} could not be created. It already exists.`);
     res.json(
       sendMessage(`Topic ${topic} could not be created. It already exists.`)
     );
@@ -45,6 +48,7 @@ router.delete("/deleteTopic", async (req, res) => {
   if (deletedTopic) {
     res.json(sendMessage(`Delete topic ${topic} successfully.`));
   } else {
+    logger.error(`Could not delete the topic ${topic}.`);
     res.json(sendMessage(`Could not delete the topic ${topic}.`));
   }
 });
@@ -71,8 +75,10 @@ router.delete("/deleteTopics", async (req, res) => {
 // Sending a message to a topic
 router.post("/sendMessage", async (req, res) => {
   const { message, topic } = req.body;
+  logger.info(`Sending message ${JSON.stringify(message)} to topic ${topic}`);
   const topicExists = (await kafkaTopicManager.getTopics()).includes(topic);
   if (!topicExists) {
+    logger.error(`Topic ${topic} does not exist. Ignoring sending the message`);
     res.json(
       sendMessage(`Topic ${topic} does not exist. Ignoring sending the message`)
     );
