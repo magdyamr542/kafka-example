@@ -9,7 +9,7 @@ POST http://localhost:1234/createTopic HTTP/1.1
 content-type: application/json
 
 {
-    "topic": "3"
+    "topic": "mongo-topic"
 }
 
 ####
@@ -39,7 +39,7 @@ content-type: application/json
 {
     "topic": "mongo-topic",
     "message" : {
-        "key" : "my key"
+        "key" : "second key"
     }
 }
 
@@ -52,6 +52,18 @@ content-type: application/json
 {
     "topic": "234234",
     "message" : "Another Generated Message to test-1 Topic"
+}
+
+
+###
+
+# broadcasting a message to all topics provided
+POST http://localhost:1234/broadcastMessage HTTP/1.1
+content-type: application/json
+
+{
+    "topics": ["first-topic" , "mongo-topic" ],
+    "message" : "Broadcasted message"
 }
 
 
