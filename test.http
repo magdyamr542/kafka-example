@@ -1,0 +1,11 @@
+
+# getting all topics
+GET http://localhost:1235/listTopics 
+
+
+### 
+
+# start producing
+POST http://localhost:1234/produce HTTP/1.1
+
+
