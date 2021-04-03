@@ -1,3 +1,5 @@
+import { Message } from "kafkajs";
+
 require("dotenv").config();
 export const getEnv = () => {
   return {
@@ -8,5 +10,20 @@ export const getEnv = () => {
     CONSUMER_CONTAINER_NAME: process.env.CONSUMER_CONTAINER_NAME,
     KAFKA_CONTAINER_NAME: process.env.KAFKA_CONTAINER_NAME,
     TOPICS: process.env.TOPICS,
+  };
+};
+
+export const getHash = () => {
+  return Math.floor(Math.random() * 1000 * 1000).toString();
+};
+
+export const generateKafkaMessage = (msg: string | object): Message => {
+  if (msg instanceof Object) {
+    msg = JSON.stringify(msg);
+  }
+  return {
+    key: getHash(),
+    value: msg,
+    timestamp: Date.now().toString(),
   };
 };
