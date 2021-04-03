@@ -18,7 +18,7 @@ const connect = async () => {
 };
 
 const consume = async () => {
-  const topics = env.TOPICS?.split(",");
+  const topics = await admin.listTopics();
   topics?.forEach(async (topic) => {
     await consumer.subscribe({ topic, fromBeginning: true });
     await consumer.run({
