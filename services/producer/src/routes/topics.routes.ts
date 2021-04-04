@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { kafkaInit } from "../api/kafka-init";
+import { kafkaInit } from "../kafka/kafka-init";
 import { sendMessage } from "../utils/utils";
 import { logger } from "../utils/winston";
 const router = Router();

@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { RecordMetadata } from "kafkajs";
-import { kafkaInit } from "../api/kafka-init";
+import { kafkaInit } from "../kafka/kafka-init";
 import { generateKafkaMessage, sendMessage } from "../utils/utils";
 import { logger } from "../utils/winston";
 const router = Router();
