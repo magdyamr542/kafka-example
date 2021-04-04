@@ -9,3 +9,7 @@ export const getEnv = (): NodeJS.ProcessEnv => {
     CONSUMER_PORT_CONTAINER: process.env.CONSUMER_PORT_CONTAINER,
   };
 };
+export const bufferToJson = (val?: Buffer | null) => {
+  if (!val) return {};
+  return JSON.parse(val.toString("utf-8"));
+};
