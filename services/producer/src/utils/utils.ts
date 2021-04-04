@@ -1,7 +1,7 @@
 import { Message } from "kafkajs";
 
 require("dotenv").config();
-export const getEnv = () => {
+export const getEnv = (): NodeJS.ProcessEnv => {
   return {
     PRODUCER_PORT_CONTAINER: process.env.PRODUCER_PORT_CONTAINER,
     CONSUMER_PORT_CONTAINER: process.env.CONSUMER_PORT_CONTAINER,
