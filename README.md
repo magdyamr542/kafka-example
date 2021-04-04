@@ -7,7 +7,13 @@
   2. Add an entry in the `docker-compose.yml` for the Service.
   3. Reach the Kafka Broker throw its Container name.
 
+<br />
+<br />
+
 ![Kafka Diagram](./docs/kafka.jpg)
+
+<br />
+<br />
 
 #### Configure:
 
