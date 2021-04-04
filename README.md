@@ -7,6 +7,8 @@
   2. Add an entry in the `docker-compose.yml` for the Service.
   3. Reach the Kafka Broker throw its Container name.
 
+![Kafka Diagram](./docs/kafka.jpg)
+
 #### Configure:
 
 - The names and ports of the containers can be configured throw the `.env` file to be accessed by all services easily.
