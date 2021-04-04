@@ -1,6 +1,6 @@
 import axios from "axios";
 import { Consumer } from "kafkajs";
-import { getEnv } from "../utils/utils";
+import { bufferToJson, getEnv } from "../utils/utils";
 import { logger } from "../utils/winston";
 
 const env = getEnv();
@@ -20,7 +20,6 @@ export class KafkaConsumer<T> implements IKafkaConsumer<T> {
     onMessage: MessageHandler<T>,
     fromBeginning = true
   ) {
-    logger.info(`Request to consume the topic ${topic}`);
     if (!(await this.doesTopicExist(topic))) {
       logger.error(`Cannot consume topic ${topic} as it does not exist.`);
       return false;
@@ -29,8 +28,11 @@ export class KafkaConsumer<T> implements IKafkaConsumer<T> {
       await this.consumer.subscribe({ topic, fromBeginning });
       await this.consumer.run({
         eachMessage: async ({ topic, message }) => {
-          logger.info(`Got new message from topic ${topic}. %j`, message.value);
-          onMessage((message.value as unknown) as T);
+          logger.info(
+            `Got new message from topic ${topic}. %j`,
+            bufferToJson(message.value)
+          );
+          onMessage(bufferToJson(message.value) as T);
         },
       });
       return true;
@@ -43,18 +45,18 @@ export class KafkaConsumer<T> implements IKafkaConsumer<T> {
   private async doesTopicExist(topic: string) {
     try {
       logger.info(`Checking if topic ${topic} exists.`);
-      const res = await axios.delete<{ exists: boolean }>(
+      const res = await axios.get<{ exists: boolean }>(
         `http://${env.PRODUCER_CONTAINER_NAME}:${env.PRODUCER_PORT_CONTAINER}/topics/doesTopicExist`,
         {
           headers: {
-            "content-type": "application/json",
+            "Content-Type": "application/json",
           },
           data: {
             topic,
           },
         }
       );
-      logger.info(`Topic ${topic}exists: ${res.data.exists}`);
+      logger.info(`Does ${topic} exists ? ${res.data.exists}`);
       return res.data.exists;
     } catch (err: unknown) {
       logger.error("Got error while checking if topic exists %j", err);
