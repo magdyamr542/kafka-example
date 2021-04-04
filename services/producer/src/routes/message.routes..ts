@@ -28,6 +28,23 @@ router.post("/sendMessage", async (req, res) => {
   });
 });
 
+router.post("/sendRandomMessage", async (req, res) => {
+  const { number, topic } = req.body;
+  logger.info(`Sending ${number} messages`);
+  const doesTopicExist = await kafkaTopicManager.doesTopicExist(topic);
+  if (!doesTopicExist) {
+    logger.error(
+      `Topic ${topic} does not exist. Ignoring sending the messages`
+    );
+    return;
+  }
+  for (let i = 0; i < number; i++) {
+    const kafkaMessage = generateKafkaMessage({ key: i });
+    await kafkaProducer.send(topic, [kafkaMessage]);
+  }
+  res.json(sendMessage("Sending..."));
+});
+
 // Broadcasting a message to all topics
 router.post("/broadcastMessage", async (req, res) => {
   const { message, topics } = req.body;

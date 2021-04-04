@@ -5,7 +5,7 @@ import { logger } from "../utils/winston";
 const router = Router();
 
 /* Kafka Init */
-const { kafkaProducer, kafkaTopicManager } = kafkaInit();
+const { kafkaTopicManager } = kafkaInit();
 
 // Getting all the topics
 router.get("/getTopics", async (_, res) => {
