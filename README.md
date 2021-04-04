@@ -54,6 +54,10 @@ CONSUMER_CONTAINER_NAME=node-consumer
      ```typescript
      { "topics" : ["first-topic" , "second-topic"] }
      ```
+  5. `/doesTopicExist`: Checks if a topic exists.
+     ```typescript
+     { "topic" : "some-topic" }
+     ```
 
 - ###### Messages End Points:
 

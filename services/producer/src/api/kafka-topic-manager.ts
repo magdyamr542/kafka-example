@@ -7,6 +7,7 @@ export interface IKafkaTopicManager {
   deleteTopicsByName: (topics: string[]) => Promise<boolean>;
   getTopicMetaData: (topicName: string) => Promise<ITopicMetadata[]>;
   getTopics: () => Promise<string[]>;
+  doesTopicExist: (topicName: string) => Promise<boolean>;
 }
 export class KafkaTopicManager implements IKafkaTopicManager {
   constructor(private readonly admin: Admin) {
@@ -67,7 +68,8 @@ export class KafkaTopicManager implements IKafkaTopicManager {
   }
 
   public async getTopicMetaData(topicName: string) {
-    return await (await this.admin.fetchTopicMetadata({ topics: [topicName] }))
-      .topics;
+
+  public async doesTopicExist(topicName: string) {
+    return await (await this.getTopics()).includes(topicName);
   }
 }

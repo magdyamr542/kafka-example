@@ -18,6 +18,14 @@ router.get("/getTopics", async (_, res) => {
   });
 });
 
+router.get("/doesTopicExist", async (req, res) => {
+  const topic = req.body.topic;
+  logger.info(`Got Request /doesTopicExists with topic ${topic}`);
+  res.json({
+    exists: await kafkaTopicManager.doesTopicExist(topic),
+  });
+});
+
 // Creating a topic
 router.post("/createTopic", async (req, res) => {
   const topic = req.body.topic;
@@ -35,8 +43,8 @@ router.post("/createTopic", async (req, res) => {
 // Deleting a topic
 router.delete("/deleteTopic", async (req, res) => {
   const topic = req.body.topic;
-  const topics = await kafkaTopicManager.getTopics();
-  if (!topics.includes(topic)) {
+  const doesTopicExist = await kafkaTopicManager.doesTopicExist(topic);
+  if (!doesTopicExist) {
     res.json(
       sendMessage(
         `Could not delete the topic ${topic} because it does not exist.`
@@ -76,8 +84,8 @@ router.delete("/deleteTopics", async (req, res) => {
 router.post("/sendMessage", async (req, res) => {
   const { message, topic } = req.body;
   logger.info(`Sending message ${JSON.stringify(message)} to topic ${topic}`);
-  const topicExists = (await kafkaTopicManager.getTopics()).includes(topic);
-  if (!topicExists) {
+  const doesTopicExist = await kafkaTopicManager.doesTopicExist(topic);
+  if (!doesTopicExist) {
     logger.error(`Topic ${topic} does not exist. Ignoring sending the message`);
     res.json(
       sendMessage(`Topic ${topic} does not exist. Ignoring sending the message`)
