@@ -91,6 +91,21 @@ CONSUMER_CONTAINER_NAME=node-consumer
             }
         }
       ```
+  3.  `/message/sendRandomMessage`: Sends a number of random Messages to a topic. for testing how good Kafka handles a big load of messages.
+
+      ```typescript
+        {
+            "topic" : "some-topic",
+            "number":  40
+        }
+      ```
+
+#### Consumer:
+
+1. `/topics/subscribe`: Subscribes to a topic if it exists.
+   ```typescript
+   { "topic" : "some-topic" }
+   ```
 
 #### Test:
 
