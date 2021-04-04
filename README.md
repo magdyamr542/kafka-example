@@ -58,6 +58,10 @@ CONSUMER_CONTAINER_NAME=node-consumer
      ```typescript
      { "topic" : "some-topic" }
      ```
+  6. `/getTopicMetadata`: Getting metadata about a topic
+     ```typescript
+     { "topic" : "some-topic" }
+     ```
 
 - ###### Messages End Points:
 

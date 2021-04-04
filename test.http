@@ -1,10 +1,18 @@
-
 # getting all topics
 GET http://localhost:1234/getTopics 
 
 ####
 # checking if a topic exists
 GET http://localhost:1234/doesTopicExist 
+content-type: application/json
+
+{
+    "topic": "mongo-topic"
+}
+
+####
+# getting topic metadata
+GET http://localhost:1234/getTopicMetadata 
 content-type: application/json
 
 {

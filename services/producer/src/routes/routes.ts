@@ -40,6 +40,23 @@ router.post("/createTopic", async (req, res) => {
   }
 });
 
+// Getting topic metadata
+router.get("/getTopicMetadata", async (req, res) => {
+  const topic = req.body.topic;
+  logger.info(`Got Request /getTopicMetadata with topic ${topic}`);
+  const doesTopicExist = await kafkaTopicManager.doesTopicExist(topic);
+  if (doesTopicExist) {
+    res.json({
+      metadata: await kafkaTopicManager.getTopicMetaData(topic),
+    });
+  } else {
+    res.json({
+      metadata: [],
+      ...sendMessage(`Topic ${topic} does not exist.`),
+    });
+  }
+});
+
 // Deleting a topic
 router.delete("/deleteTopic", async (req, res) => {
   const topic = req.body.topic;

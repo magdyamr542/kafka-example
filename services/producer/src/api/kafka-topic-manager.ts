@@ -68,6 +68,14 @@ export class KafkaTopicManager implements IKafkaTopicManager {
   }
 
   public async getTopicMetaData(topicName: string) {
+    try {
+      return await (
+        await this.admin.fetchTopicMetadata({ topics: [topicName] })
+      ).topics;
+    } catch {
+      return [];
+    }
+  }
 
   public async doesTopicExist(topicName: string) {
     return await (await this.getTopics()).includes(topicName);
