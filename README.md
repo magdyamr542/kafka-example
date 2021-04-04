@@ -10,12 +10,13 @@
 #### Configure:
 
 - The names and ports of the containers can be configured throw the `.env` file to be accessed by all services easily.
+- **Note**:
+  - `PORT_CONTAINER` stands for the port exposed at the container level. This is the port used by other docker containers to reach the service in the docker network
+  - `PORT_HOST` stands for the port exposed at the host level. This is the port used by other services to reach the service in the host level.
+  - `KAFKA_ADVERTISED_HOST_NAME` is the ip of your host. make sure to change this based on your ip
 - Example:
 
 ```
-# PORT_CONTAINER => The port throw which other docker containers can reach the service inside of the current docker network
-# PORT_HOST => The exposed port throw which other services can reach the service from outside the current docker network
-
 PRODUCER_PORT_CONTAINER=1234
 PRODUCER_PORT_HOST=1234
 
@@ -25,7 +26,7 @@ CONSUMER_PORT_HOST=1235
 KAFKA_PORT_CONTAINER=9092
 KAFKA_PORT_HOST=9095
 KAFKA_CONTAINER_NAME=kafka-broker
-KAFKA_ADVERTISED_HOST_NAME=192.168.178.38 ## make sure to replace this with your docker host ip
+KAFKA_ADVERTISED_HOST_NAME=192.168.178.38
 
 PRODUCER_CONTAINER_NAME=node-producer
 CONSUMER_CONTAINER_NAME=node-consumer
