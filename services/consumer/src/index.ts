@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import { getEnv } from "./utils/utils";
 import { Kafka } from "kafkajs";
+import { logger } from "./utils/winston";
 
 const env = getEnv();
 
@@ -54,7 +55,7 @@ const main = async () => {
   });
 
   app.listen(env.CONSUMER_PORT_CONTAINER, () =>
-    console.log("Consumer Started on port => " + env.CONSUMER_PORT_CONTAINER)
+    logger.info("Consumer Started on port => " + env.CONSUMER_PORT_CONTAINER)
   );
 };
 
