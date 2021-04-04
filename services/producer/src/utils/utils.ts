@@ -26,3 +26,5 @@ export const generateKafkaMessage = (msg: string | object): Message => {
     timestamp: Date.now().toString(),
   };
 };
+
+export const sendMessage = (message: string) => ({ message });

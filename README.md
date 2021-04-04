@@ -37,35 +37,35 @@ CONSUMER_CONTAINER_NAME=node-consumer
 
 - ###### Topics End Points:
 
-  1. `/getTopics`: Get all the Topics provided by the broker.
-  2. `/createTopic`: Creates a topic provided in the request body.
+  1. `/topics/getTopics`: Get all the Topics provided by the broker.
+  2. `/topics/createTopic`: Creates a topic provided in the request body.
 
      ```typescript
      { "topic" : "some-topic" }
      ```
 
-  3. `/deleteTopics`: Deletes a topic provided in the request body.
+  3. `/topics/deleteTopics`: Deletes a topic provided in the request body.
 
      ```typescript
      { "topic" : "some-topic" }
      ```
 
-  4. `/deleteTopics`: Deletes more than one topic at a time.
+  4. `/topics/deleteTopics`: Deletes more than one topic at a time.
      ```typescript
      { "topics" : ["first-topic" , "second-topic"] }
      ```
-  5. `/doesTopicExist`: Checks if a topic exists.
+  5. `/topics/doesTopicExist`: Checks if a topic exists.
      ```typescript
      { "topic" : "some-topic" }
      ```
-  6. `/getTopicMetadata`: Getting metadata about a topic
+  6. `/topics/getTopicMetadata`: Getting metadata about a topic
      ```typescript
      { "topic" : "some-topic" }
      ```
 
 - ###### Messages End Points:
 
-  1.  `/sendMessage`: Sends a message to a certain topic.
+  1.  `/message/sendMessage`: Sends a message to a certain topic.
       ```typescript
         {
             "topic": "some-topic",
@@ -81,7 +81,7 @@ CONSUMER_CONTAINER_NAME=node-consumer
             "message" : "message as string"
         }
       ```
-  2.  `/broadcastMessage`: Broadcasts the message to all provided topics.
+  2.  `/message/broadcastMessage`: Broadcasts the message to all provided topics.
       ```typescript
         {
             "topics": ["first-topic" , "second-topic"]

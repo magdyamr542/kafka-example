@@ -1,9 +1,9 @@
 # getting all topics
-GET http://localhost:1234/getTopics 
+GET http://localhost:1234/topics/getTopics 
 
 ####
 # checking if a topic exists
-GET http://localhost:1234/doesTopicExist 
+GET http://localhost:1234/topics/doesTopicExist 
 content-type: application/json
 
 {
@@ -12,7 +12,7 @@ content-type: application/json
 
 ####
 # getting topic metadata
-GET http://localhost:1234/getTopicMetadata 
+GET http://localhost:1234/topics/getTopicMetadata 
 content-type: application/json
 
 {
@@ -22,7 +22,7 @@ content-type: application/json
 
 ####
 # creating a topic
-POST http://localhost:1234/createTopic HTTP/1.1
+POST http://localhost:1234/topics/createTopic HTTP/1.1
 content-type: application/json
 
 {
@@ -31,7 +31,7 @@ content-type: application/json
 
 ####
 # deleting a topic
-DELETE http://localhost:1234/deleteTopic HTTP/1.1
+DELETE http://localhost:1234/topics/deleteTopic HTTP/1.1
 content-type: application/json
 
 {
@@ -40,7 +40,7 @@ content-type: application/json
 
 ####
 # deleting topics
-DELETE http://localhost:1234/deleteTopics HTTP/1.1
+DELETE http://localhost:1234/topics/deleteTopics HTTP/1.1
 content-type: application/json
 
 {
@@ -50,7 +50,7 @@ content-type: application/json
 
 ####
 # sending a message to a topic that does exist
-POST http://localhost:1234/sendMessage HTTP/1.1
+POST http://localhost:1234/message/sendMessage HTTP/1.1
 content-type: application/json
 
 {
@@ -62,18 +62,18 @@ content-type: application/json
 
 ####
 # sending a message to a topic that does not exist
-POST http://localhost:1234/sendMessage HTTP/1.1
+POST http://localhost:1234/message/sendMessage HTTP/1.1
 content-type: application/json
 
 {
-    "topic": "234234",
-    "message" : "Another Generated Message to test-1 Topic"
+    "topic": "mongo-topic",
+    "message" : "Some Generated Message"
 }
 
 
 ###
 # broadcasting a message to all topics provided
-POST http://localhost:1234/broadcastMessage HTTP/1.1
+POST http://localhost:1234/message/broadcastMessage HTTP/1.1
 content-type: application/json
 
 {
