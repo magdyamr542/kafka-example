@@ -2,12 +2,17 @@
 
 - This API runs a single **Kafka broker** in docker along with other two Services.
 - The Services are **Consumer** and **Producer** for simplicity.
+- The Services are reached by an **Nginx API Gateway**.
 - Any additional Services can be added throw:
   1. Define your Service in the `./services` directory along with all its Docker requirements like possible `Dockerfile` etc.
   2. Add an entry in the `docker-compose.yml` for the Service.
   3. Reach the Kafka Broker throw its Container name.
 
 <br />
+<br />
+
+![Nginx Diagram](./docs/nginx.png)
+
 <br />
 
 ![Kafka Diagram](./docs/kafka.jpg)
@@ -38,6 +43,9 @@ KAFKA_ADVERTISED_HOST_NAME=192.168.178.38
 
 PRODUCER_CONTAINER_NAME=node-producer
 CONSUMER_CONTAINER_NAME=node-consumer
+
+NGINX_PORT_HOST=8081
+NGINX_PORT_CONTAINER=80
 ```
 
 #### Producer:
@@ -46,35 +54,35 @@ CONSUMER_CONTAINER_NAME=node-consumer
 
 - ###### Topics End Points:
 
-  1. `/topics/getTopics`: Get all the Topics provided by the broker.
-  2. `/topics/createTopic`: Creates a topic provided in the request body.
+  1. `/producer/topics/getTopics`: Get all the Topics provided by the broker.
+  2. `/producer/topics/createTopic`: Creates a topic provided in the request body.
 
      ```typescript
      { "topic" : "some-topic" }
      ```
 
-  3. `/topics/deleteTopics`: Deletes a topic provided in the request body.
+  3. `/producer/topics/deleteTopics`: Deletes a topic provided in the request body.
 
      ```typescript
      { "topic" : "some-topic" }
      ```
 
-  4. `/topics/deleteTopics`: Deletes more than one topic at a time.
+  4. `/producer/topics/deleteTopics`: Deletes more than one topic at a time.
      ```typescript
      { "topics" : ["first-topic" , "second-topic"] }
      ```
-  5. `/topics/doesTopicExist`: Checks if a topic exists.
+  5. `/producer/topics/doesTopicExist`: Checks if a topic exists.
      ```typescript
      { "topic" : "some-topic" }
      ```
-  6. `/topics/getTopicMetadata`: Getting metadata about a topic
+  6. `/producer/topics/getTopicMetadata`: Getting metadata about a topic
      ```typescript
      { "topic" : "some-topic" }
      ```
 
 - ###### Messages End Points:
 
-  1.  `/message/sendMessage`: Sends a message to a certain topic.
+  1.  `/producer/message/sendMessage`: Sends a message to a certain topic.
       ```typescript
         {
             "topic": "some-topic",
@@ -90,7 +98,7 @@ CONSUMER_CONTAINER_NAME=node-consumer
             "message" : "message as string"
         }
       ```
-  2.  `/message/broadcastMessage`: Broadcasts the message to all provided topics.
+  2.  `/producer/message/broadcastMessage`: Broadcasts the message to all provided topics.
       ```typescript
         {
             "topics": ["first-topic" , "second-topic"]
@@ -99,7 +107,7 @@ CONSUMER_CONTAINER_NAME=node-consumer
             }
         }
       ```
-  3.  `/message/sendRandomMessage`: Sends a number of random Messages to a topic. for testing how good Kafka handles a big load of messages.
+  3.  `/producer/message/sendRandomMessage`: Sends a number of random Messages to a topic. for testing how good Kafka handles a big load of messages.
 
       ```typescript
         {
@@ -110,7 +118,7 @@ CONSUMER_CONTAINER_NAME=node-consumer
 
 #### Consumer:
 
-1. `/topics/subscribe`: Subscribes to a topic if it exists.
+1. `/consumer/topics/subscribe`: Subscribes to a topic if it exists.
    ```typescript
    { "topic" : "some-topic" }
    ```

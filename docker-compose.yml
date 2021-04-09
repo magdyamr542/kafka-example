@@ -3,8 +3,6 @@ services:
   zookeeper:
     image: wurstmeister/zookeeper:3.4.6
     container_name: kafka-zookeeper
-    ports:
-      - 2181:2181
   kafka:
     image: wurstmeister/kafka:2.11-1.1.0
     container_name: ${KAFKA_CONTAINER_NAME}
@@ -23,8 +21,6 @@ services:
   node-producer:
     build: ./services/producer
     container_name: ${PRODUCER_CONTAINER_NAME}
-    ports:
-      - ${PRODUCER_PORT_HOST}:${PRODUCER_PORT_CONTAINER}
     depends_on:
       - kafka
     volumes:
@@ -34,11 +30,21 @@ services:
   node-consumer:
     build: ./services/consumer
     container_name: ${CONSUMER_CONTAINER_NAME}
-    ports:
-      - ${CONSUMER_PORT_HOST}:${CONSUMER_PORT_CONTAINER}
     depends_on:
       - kafka
     volumes:
       - ./services/consumer/:/usr/src/app
     env_file:
       - .env
+  nginx:
+    container_name: nginx
+    restart: always
+    build:
+      context: ./nginx
+    ports:
+      - ${NGINX_PORT_HOST}:${NGINX_PORT_CONTAINER}
+    volumes:
+      - ./nginx/conf.d/:/etc/nginx/conf.d
+    depends_on:
+      - node-consumer
+      - node-producer
