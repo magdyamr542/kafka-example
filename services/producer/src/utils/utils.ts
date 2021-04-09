@@ -1,3 +1,4 @@
+import { Request } from "express";
 import { Message } from "kafkajs";
 
 require("dotenv").config();
@@ -28,3 +29,10 @@ export const generateKafkaMessage = (msg: string | object): Message => {
 };
 
 export const sendMessage = (message: string) => ({ message });
+export const getRequestIp = (req: Request) => {
+  return (
+    req.headers["x-forwarded-for"] ||
+    req.connection.remoteAddress ||
+    req.socket.remoteAddress
+  );
+};

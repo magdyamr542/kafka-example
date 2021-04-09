@@ -9,7 +9,6 @@ const { kafkaTopicManager } = kafkaInit();
 
 // Getting all the topics
 router.get("/getTopics", async (_, res) => {
-  logger.info("Got Request /getTopics");
   res.json({
     topics: await kafkaTopicManager.getTopics(),
   });
@@ -17,7 +16,6 @@ router.get("/getTopics", async (_, res) => {
 
 router.get("/doesTopicExist", async (req, res) => {
   const topic = req.body.topic;
-  logger.info(`Got Request /doesTopicExists with topic ${topic}`);
   res.json({
     exists: await kafkaTopicManager.doesTopicExist(topic),
   });

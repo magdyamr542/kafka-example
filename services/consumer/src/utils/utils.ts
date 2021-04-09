@@ -1,4 +1,5 @@
 require("dotenv").config();
+import { Request } from "express";
 export const getEnv = (): NodeJS.ProcessEnv => {
   return {
     PRODUCER_PORT_CONTAINER: process.env.PRODUCER_PORT_CONTAINER,
@@ -12,4 +13,12 @@ export const getEnv = (): NodeJS.ProcessEnv => {
 export const bufferToJson = (val?: Buffer | null) => {
   if (!val) return {};
   return JSON.parse(val.toString("utf-8"));
+};
+
+export const getRequestIp = (req: Request) => {
+  return (
+    req.headers["x-forwarded-for"] ||
+    req.connection.remoteAddress ||
+    req.socket.remoteAddress
+  );
 };
